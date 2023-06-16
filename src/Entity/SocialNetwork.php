@@ -25,6 +25,9 @@ class SocialNetwork
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $creation_date = null;
 
+    #[ORM\ManyToOne(inversedBy: 'socialNetworks')]
+    private ?brand $brand_id = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +65,18 @@ class SocialNetwork
     public function setCreationDate(\DateTimeInterface $creation_date): self
     {
         $this->creation_date = $creation_date;
+
+        return $this;
+    }
+
+    public function getBrandId(): ?brand
+    {
+        return $this->brand_id;
+    }
+
+    public function setBrandId(?brand $brand_id): self
+    {
+        $this->brand_id = $brand_id;
 
         return $this;
     }
