@@ -25,10 +25,14 @@ class Post
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $creation_date = null;
+    private ?\DateTimeInterface $created_at = null;
 
     #[ORM\OneToMany(mappedBy: 'post_id', targetEntity: Like::class, orphanRemoval: true)]
     private Collection $likes;
+
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Brand $author = null;
 
     public function __construct()
     {
@@ -64,14 +68,14 @@ class Post
         return $this;
     }
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->creation_date;
+        return $this->created_at;
     }
 
-    public function setCreationDate(\DateTimeInterface $creation_date): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->creation_date = $creation_date;
+        $this->created_at = $created_at;
 
         return $this;
     }
@@ -102,6 +106,18 @@ class Post
                 $like->setPostId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Brand
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Brand $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

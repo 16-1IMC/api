@@ -35,10 +35,14 @@ class Brand
     #[ORM\OneToMany(mappedBy: 'brand_id', targetEntity: SocialNetwork::class)]
     private Collection $socialNetworks;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
+    private Collection $posts;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->socialNetworks = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +149,36 @@ class Brand
             // set the owning side to null (unless already changed)
             if ($socialNetwork->getBrandId() === $this) {
                 $socialNetwork->setBrandId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getAuthor() === $this) {
+                $post->setAuthor(null);
             }
         }
 

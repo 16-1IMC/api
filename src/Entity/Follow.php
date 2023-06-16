@@ -19,7 +19,7 @@ class Follow
     #[ORM\JoinColumn(nullable: false)]
     private ?brand $brand = null;
 
-    #[ORM\ManyToOne(targetEntity: user::class, inversedBy: 'follows')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'follows')]
     #[ORM\JoinColumn(nullable: false)]
     private ?user $user = null;
 

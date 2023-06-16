@@ -23,7 +23,7 @@ class SocialNetwork
     private ?string $link = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $creation_date = null;
+    private ?\DateTimeInterface $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'socialNetworks')]
     private ?brand $brand_id = null;
@@ -57,14 +57,14 @@ class SocialNetwork
         return $this;
     }
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->creation_date;
+        return $this->created_at;
     }
 
-    public function setCreationDate(\DateTimeInterface $creation_date): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->creation_date = $creation_date;
+        $this->created_at = $created_at;
 
         return $this;
     }

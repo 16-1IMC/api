@@ -2,14 +2,23 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get(),
+        new Delete()
+    ]
+)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
 class User
 {
     #[ORM\Id]

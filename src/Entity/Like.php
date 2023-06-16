@@ -18,7 +18,7 @@ class Like
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?post $post_id = null;
+    private ?Post $post_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -32,12 +32,12 @@ class Like
         return $this->id;
     }
 
-    public function getPostId(): ?post
+    public function getPostId(): ?Post
     {
         return $this->post_id;
     }
 
-    public function setPostId(?post $post_id): self
+    public function setPostId(?Post $post_id): self
     {
         $this->post_id = $post_id;
 
