@@ -47,9 +47,8 @@ Lancer le serveur
 ```bash
   symfony serve
 ```
-se rendre sur http://localhost:8000/api
 
-Une documentation de l'API est disponible à l'adresse http://localhost:8000/api/doc
+Une documentation de l'API est disponible à l'adresse http://localhost:8000/api
 
 ## Authors
 
