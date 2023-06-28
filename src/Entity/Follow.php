@@ -7,7 +7,6 @@ use App\Repository\FollowRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FollowRepository::class)]
-#[ApiResource]
 class Follow
 {
     #[ORM\Id]
@@ -17,7 +16,7 @@ class Follow
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?brand $brand = null;
+    private ?Brand $brand = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'follows')]
     #[ORM\JoinColumn(nullable: false)]
@@ -28,12 +27,12 @@ class Follow
         return $this->id;
     }
 
-    public function getBrand(): ?brand
+    public function getBrand(): ?Brand
     {
         return $this->brand;
     }
 
-    public function setBrand(brand $brand): self
+    public function setBrand(Brand $brand): self
     {
         $this->brand = $brand;
 

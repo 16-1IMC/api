@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource]
 class Category
 {
     #[ORM\Id]
@@ -20,7 +19,7 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: brand::class, inversedBy: 'categories')]
+    #[ORM\ManyToMany(targetEntity: Brand::class, inversedBy: 'categories')]
     private Collection $brands;
 
     public function __construct()
@@ -46,14 +45,14 @@ class Category
     }
 
     /**
-     * @return Collection<int, brand>
+     * @return Collection<int, Brand>
      */
     public function getBrands(): Collection
     {
         return $this->brands;
     }
 
-    public function addBrand(brand $brand): self
+    public function addBrand(Brand $brand): self
     {
         if (!$this->brands->contains($brand)) {
             $this->brands->add($brand);
@@ -62,7 +61,7 @@ class Category
         return $this;
     }
 
-    public function removeBrand(brand $brand): self
+    public function removeBrand(Brand $brand): self
     {
         $this->brands->removeElement($brand);
 

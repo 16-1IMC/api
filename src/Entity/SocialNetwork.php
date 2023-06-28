@@ -8,7 +8,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SocialNetworkRepository::class)]
-#[ApiResource]
 class SocialNetwork
 {
     #[ORM\Id]
@@ -26,7 +25,7 @@ class SocialNetwork
     private ?\DateTimeInterface $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'socialNetworks')]
-    private ?brand $brand_id = null;
+    private ?Brand $brand_id = null;
 
     public function getId(): ?int
     {
@@ -69,12 +68,12 @@ class SocialNetwork
         return $this;
     }
 
-    public function getBrandId(): ?brand
+    public function getBrandId(): ?Brand
     {
         return $this->brand_id;
     }
 
-    public function setBrandId(?brand $brand_id): self
+    public function setBrandId(?Brand $brand_id): self
     {
         $this->brand_id = $brand_id;
 

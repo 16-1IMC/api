@@ -1,0 +1,21 @@
+api_platform:
+  title: 'StyleStock API'
+  description: 'API used for StyleStock project'
+  version: '0.0.1'
+
+  formats:
+    jsonld: ['application/ld+json']
+    json: ['application/json']
+    html: ['text/html']
+
+  collection:
+    order: 'DESC'
+    order_parameter_name: 'order'
+    pagination:
+      enabled: true
+      page_parameter_name: page
+      items_per_page_parameter_name: limit
+
+  defaults:
+    pagination_client_items_per_page: true  
+    
