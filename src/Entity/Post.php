@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\PostRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PostRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ApiResource()]
 class Post
 {
     #[ORM\Id]
@@ -18,6 +20,7 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['brand:read:single'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]

@@ -7,6 +7,7 @@ use App\Repository\FollowRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FollowRepository::class)]
+#[ApiResource()]
 class Follow
 {
     #[ORM\Id]
