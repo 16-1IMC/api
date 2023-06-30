@@ -18,19 +18,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: BrandRepository::class)]
 #[ORM\Table(name: '`brand`')]
 #[UniqueEntity(fields: ['email'])]
 #[ApiFilter(OrderFilter::class, properties: ['created_at'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'status' => 'exact'])]
 #[ApiResource(
     operations: [
         new GetCollection(
             normalizationContext: ['groups' => ['brand:read:collection']],
-            order: ['created_at' => 'DESC']
         ),
         new Get(normalizationContext: ['groups' => ['brand:read:single']]),
-        new PostApi(denormalizationContext: ['groups' => ['brand:write']]),
+        new PostApi(denormalizationContext: ['groups' => ['brand:write:data']]),
         new Delete(),
         new Put(denormalizationContext: ['groups' => ['brand:update']])
     ]
@@ -44,15 +45,15 @@ class Brand
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['brand:write', 'brand:update'])]
+    #[Groups(['brand:write:data', 'brand:update'])]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -70,6 +71,16 @@ class Brand
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
     #[Groups(['brand:read:single'])]
     private Collection $posts;
+
+    #[ORM\Column(length: 16)]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
+    private ?string $status = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Image $profilePicture = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Image $banner = null;
 
     public function __construct()
     {
@@ -214,6 +225,42 @@ class Brand
                 $post->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?Image
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?Image $profilePicture): static
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    public function getBanner(): ?Image
+    {
+        return $this->banner;
+    }
+
+    public function setBanner(?Image $banner): static
+    {
+        $this->banner = $banner;
 
         return $this;
     }

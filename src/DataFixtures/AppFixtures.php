@@ -47,16 +47,18 @@ class AppFixtures extends Fixture
             $manager->persist($categories[$i]);
         }
 
-        // Create 5 brands
+        // Create 15 brands
         $brands = array();
+        $brandStatus = ["pending", "approved", "rejected"];
         $socialNetworksNameList = ["Facebook", "Instagram", "Twitter", "Pinterest", "TikTok"];
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $brands[$i] = new Brand();
             $brands[$i]->setName($faker->company());
             $brands[$i]->setEmail($faker->email());
             $brands[$i]->setPassword($faker->password());
             $brands[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $brands[$i]->addCategory($categories[array_rand($categories)]);
+            $brands[$i]->setStatus($faker->randomElement($brandStatus));
             $socialNetworks = array();
             for ($j = 0; $j < rand(1, 4); $j++) {
                 $socialNetworks[$j] = new SocialNetwork();
