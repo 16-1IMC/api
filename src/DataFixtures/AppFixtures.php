@@ -24,18 +24,18 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 20; $i++) {
             $users[$i] = new User();
             $users[$i]->setEmail($faker->email());
-            $users[$i]->setPassword($faker->password());
+            $users[$i]->setPassword($faker->password()); // TODO: Hash passwords
             $users[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
-            $users[$i]->setIsAdmin(false);
+            $users[$i]->setRoles(['USER']);
             $manager->persist($users[$i]);
         }
         
         // Create admin user
         $users[20] = new User();
         $users[20]->setEmail("admin@stylestock.com");
-        $users[20]->setPassword("adminSS1234");
+        $users[20]->setPlainPassword("adminSS1234"); // TODO: Hash passwords
         $users[20]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
-        $users[20]->setIsAdmin(true);
+        $users[20]->setRoles(['ADMIN']);
         $manager->persist($users[20]);
 
         // Create 5 categories

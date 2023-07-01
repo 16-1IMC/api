@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Like;
+use App\Entity\Follow;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
@@ -16,6 +18,10 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\State\UserPasswordHasher;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiFilter(OrderFilter::class, properties: ['created_at'], arguments: ['orderParameterName' => 'order'])]
 #[ApiResource(
@@ -24,7 +30,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             normalizationContext: ['groups' => ['user:read:collection']],
         ),
         new Get(normalizationContext: ['groups' => ['user:read:single']]),
-        new Post(denormalizationContext: ['groups' => ['user:write']]),
+        new Post(
+            uriTemplate: '/users/register',
+            denormalizationContext: ['groups' => ['user:write']],
+            processor: UserPasswordHasher::class,
+            validationContext: ['groups' => ['user:write']],
+            defaults: ['roles' => [['USER']]]
+        ),
         new Delete(),
         new Put(denormalizationContext: ['groups' => ['user:update']])
     ]
@@ -32,7 +44,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'])]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,21 +52,26 @@ class User
     #[Groups(['user:read:single', 'user:read:collection'])]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
     #[ORM\Column(length: 255, unique: true)]
     #[Groups(['user:read:single', 'user:read:collection', 'user:write', 'user:update'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:write', 'user:update'])]
     private ?string $password = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:write', 'user:update'])]
+    private ?string $plainPassword = null;
+
+    #[ORM\Column(type: 'json')]
+    #[Groups(['user:read:single', 'user:read:collection'])]
+    private array $roles = [];
 
     #[ORM\Column]
     #[Groups(['user:read:single', 'user:read:collection'])]
     private ?\DateTimeImmutable $created_at = null;
-
-    #[ORM\Column]
-    #[Groups(['user:read:single', 'user:read:collection'])]
-    private ?bool $isAdmin = null;
 
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Like::class, orphanRemoval: true)]
     #[Groups(['user:read:single'])]
@@ -66,6 +83,7 @@ class User
 
     public function __construct() {
         $this->setCreatedAt(new \DateTimeImmutable());
+        $this->roles = ['USER'];
         $this->likes = new ArrayCollection();
         $this->follows = new ArrayCollection();
     }
@@ -107,18 +125,6 @@ class User
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function isIsAdmin(): ?bool
-    {
-        return $this->isAdmin;
-    }
-
-    public function setIsAdmin(bool $isAdmin): self
-    {
-        $this->isAdmin = $isAdmin;
 
         return $this;
     }
@@ -181,5 +187,44 @@ class User
         }
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): static
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        $this->plainPassword = null;
     }
 }

@@ -50,6 +50,27 @@ Lancer le serveur
 
 Une documentation de l'API est disponible à l'adresse http://localhost:8000/api
 
+## Utilisation de l'API
+
+Une fois sur la page de documentation, la totalité des routes seront visibles. En revanche pour pouvoir utiliser les routes nécessitant une authentification, il faudra se connecter avec un compte utilisateur.
+
+Pour cela, envoyer une requête sur la route /api/auth avec la méthode POST et le body suivant :
+
+```json
+{
+  "email": "example@email.com"
+  "password": "password"
+}
+```
+
+L'API renvera alors un token qu'il faudra ajouter en cliquant sur le bouton "Authorize" en haut à droite de la page de documentation. Il faudra alors ajouter le token dans le champ "Value" sous la forme suivante :
+
+```
+Bearer <token>
+```
+
+Une fois authentifié, la totalité des routes seront utilisables.
+
 ## Authors
 
 - [@TheGoodDev](https://github.com/TheGooodDev)

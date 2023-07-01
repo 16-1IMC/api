@@ -18,7 +18,7 @@ class RegisterUserController extends AbstractController
             $this->$passwordHasher->hashPassword($data, $data->getPassword())
         );
 
-        $data->setIsAdmin(false);
+        $data->setRoles(['USER']);
 
         $this->$entityManager->persist($data);
         $this->$entityManager->flush();
