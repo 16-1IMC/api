@@ -24,7 +24,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 20; $i++) {
             $users[$i] = new User();
             $users[$i]->setEmail($faker->email());
-            $users[$i]->setPassword('$2y$13$fAeeVb0Phf6bv0qlkPY90uc2AYCpyVr8W6Tu06V6ID/JBXBJ9EZA.'); // TODO: Hash passwords
+            $users[$i]->setPassword('$2y$13$fAeeVb0Phf6bv0qlkPY90uc2AYCpyVr8W6Tu06V6ID/JBXBJ9EZA.'); // MDP = Password
             $users[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $users[$i]->setRoles(['USER']);
             $manager->persist($users[$i]);
@@ -33,7 +33,7 @@ class AppFixtures extends Fixture
         // Create admin user
         $users[45] = new User();
         $users[45]->setEmail("admin@stylestock.com");
-        $users[45]->setPassword('$2y$13$fAeeVb0Phf6bv0qlkPY90uc2AYCpyVr8W6Tu06V6ID/JBXBJ9EZA.'); // TODO: Hash passwords
+        $users[45]->setPassword('$2y$13$fAeeVb0Phf6bv0qlkPY90uc2AYCpyVr8W6Tu06V6ID/JBXBJ9EZA.'); // MDP = Password
         $users[45]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
         $users[45]->setRoles(['ADMIN']);
         $manager->persist($users[45]);
