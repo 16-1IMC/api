@@ -19,6 +19,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\State\UserPasswordHasher;
 
 #[ORM\Entity(repositoryClass: BrandRepository::class)]
 #[ORM\Table(name: '`brand`')]
@@ -31,12 +34,16 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             normalizationContext: ['groups' => ['brand:read:collection']],
         ),
         new Get(normalizationContext: ['groups' => ['brand:read:single']]),
-        new PostApi(denormalizationContext: ['groups' => ['brand:write:data']]),
+        new PostApi(
+            uriTemplate: '/brands/register',
+            processor: UserPasswordHasher::class,
+            denormalizationContext: ['groups' => ['brand:write:data']]
+        ),
         new Delete(),
         new Put(denormalizationContext: ['groups' => ['brand:update']])
     ]
 )]
-class Brand
+class Brand implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -47,14 +54,17 @@ class Brand
     #[ORM\Column(length: 255)]
     #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
     private ?string $name = null;
-
+    
     #[ORM\Column(length: 255, unique: true)]
     #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
     private ?string $email = null;
-
+    
     #[ORM\Column(length: 255)]
-    #[Groups(['brand:write:data', 'brand:update'])]
     private ?string $password = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['brand:write:data', 'brand:update'])]
+    private ?string $plainPassword = null;
 
     #[ORM\Column]
     #[Groups(['brand:read:single', 'brand:read:collection'])]
@@ -73,7 +83,7 @@ class Brand
     private Collection $posts;
 
     #[ORM\Column(length: 16)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:update'])]
     private ?string $status = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -82,11 +92,14 @@ class Brand
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Image $banner = null;
 
+
     public function __construct()
     {
+        $this->created_at = new \DateTimeImmutable();
         $this->categories = new ArrayCollection();
         $this->socialNetworks = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->status = 'PENDING';
     }
 
     public function getId(): ?int
@@ -263,5 +276,37 @@ class Brand
         $this->banner = $banner;
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): static
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_BRAND'];
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        $this->plainPassword = null;
     }
 }

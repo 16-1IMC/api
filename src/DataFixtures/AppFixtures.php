@@ -7,9 +7,9 @@ use Faker\Factory;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\Brand;
+use DateTimeImmutable;
 use App\Entity\Category;
 use App\Entity\SocialNetwork;
-use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -19,24 +19,24 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create();
 
-        // Create 20 users
+        // Create 45 users
         $users = array(); 
         for ($i = 0; $i < 20; $i++) {
             $users[$i] = new User();
             $users[$i]->setEmail($faker->email());
-            $users[$i]->setPassword($faker->password()); // TODO: Hash passwords
+            $users[$i]->setPassword('$2y$13$fAeeVb0Phf6bv0qlkPY90uc2AYCpyVr8W6Tu06V6ID/JBXBJ9EZA.'); // TODO: Hash passwords
             $users[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $users[$i]->setRoles(['USER']);
             $manager->persist($users[$i]);
         }
         
         // Create admin user
-        $users[20] = new User();
-        $users[20]->setEmail("admin@stylestock.com");
-        $users[20]->setPlainPassword("adminSS1234"); // TODO: Hash passwords
-        $users[20]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
-        $users[20]->setRoles(['ADMIN']);
-        $manager->persist($users[20]);
+        $users[45] = new User();
+        $users[45]->setEmail("admin@stylestock.com");
+        $users[45]->setPassword('$2y$13$fAeeVb0Phf6bv0qlkPY90uc2AYCpyVr8W6Tu06V6ID/JBXBJ9EZA.'); // TODO: Hash passwords
+        $users[45]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+        $users[45]->setRoles(['ADMIN']);
+        $manager->persist($users[45]);
 
         // Create 5 categories
         $categoryNameList = ["Streetwear", "Sportswear", "Casual", "Formal", "Business"];
@@ -49,13 +49,13 @@ class AppFixtures extends Fixture
 
         // Create 15 brands
         $brands = array();
-        $brandStatus = ["pending", "approved", "rejected"];
+        $brandStatus = ["PENDING", "APPROVED", "REJECTED"];
         $socialNetworksNameList = ["Facebook", "Instagram", "Twitter", "Pinterest", "TikTok"];
         for ($i = 0; $i < 15; $i++) {
             $brands[$i] = new Brand();
             $brands[$i]->setName($faker->company());
             $brands[$i]->setEmail($faker->email());
-            $brands[$i]->setPassword($faker->password());
+            $brands[$i]->setPassword('$2y$13$CrASJ2E5ogwy.TMA2xn/ZuCcl2rdIIwfCmU0ajTxwven.BTSzwzTq');
             $brands[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $brands[$i]->addCategory($categories[array_rand($categories)]);
             $brands[$i]->setStatus($faker->randomElement($brandStatus));

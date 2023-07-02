@@ -34,8 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/users/register',
             denormalizationContext: ['groups' => ['user:write']],
             processor: UserPasswordHasher::class,
-            validationContext: ['groups' => ['user:write']],
-            defaults: ['roles' => [['USER']]]
+            validationContext: ['groups' => ['user:write']]
         ),
         new Delete(),
         new Put(denormalizationContext: ['groups' => ['user:update']])
