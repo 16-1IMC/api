@@ -27,7 +27,7 @@ use App\State\UserPasswordHasher;
 #[ORM\Table(name: '`brand`')]
 #[UniqueEntity(fields: ['email'])]
 #[ApiFilter(OrderFilter::class, properties: ['created_at'], arguments: ['orderParameterName' => 'order'])]
-#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'status' => 'exact', 'email' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'status' => 'exact', 'email' => 'partial'])]
 #[ApiResource(
     operations: [
         new GetCollection(

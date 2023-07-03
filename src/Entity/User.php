@@ -25,7 +25,7 @@ use App\State\UserPasswordHasher;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiFilter(OrderFilter::class, properties: ['created_at'], arguments: ['orderParameterName' => 'order'])]
-#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'email' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'email' => 'partial'])]
 #[ApiResource(
     operations: [
         new GetCollection(
