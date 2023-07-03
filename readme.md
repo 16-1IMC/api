@@ -1,4 +1,4 @@
-[![Generic badge](https://img.shields.io/badge/Type-API-green.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Language-php_8.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Language-symfony_5.4-purple.svg)](https://shields.io/)
+![Generic badge](https://img.shields.io/badge/Type-API-green.svg) ![Generic badge](https://img.shields.io/badge/Language-php_8.2-blue.svg) ![Generic badge](https://img.shields.io/badge/Framework-Symfony_5.4-purple.svg) ![Generic badge](https://img.shields.io/badge/Framework-Api_Platform_3.1-cyan.svg)
 
 # StyleStock API
 
@@ -9,7 +9,7 @@ API du projet StyleStock dans le cadre du projet de fin d'année de notre Bachel
 Cloner le projet
 
 ```bash
-  git clone https://github.com/16-1IMC/api.git
+git clone https://github.com/16-1IMC/api.git
 ```
 
 Se rendre dans le répertoire
@@ -27,25 +27,31 @@ composer install
 Configurer la base de donnée le fichier .env.local
 
 ```bash
-    DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8&charset=utf8mb4"
+DATABASE_URL="mysql://<User>:<Password>@127.0.0.1:3306/<Nom de la Base>?serverVersion=8&charset=utf8mb4"
+```
+
+Si elle n'existe pas, créer une base de donnée
+
+```bash
+php bin/console doctrine:database:create
 ```
 
 Mettre à jour le schéma de la base de donnée
 
 ```bash
-  php bin/console doctrine:schema:update --force
+php bin/console doctrine:schema:update --force
 ```
 
 (Optionnel) Charger des données de test
 
 ```bash
-  php bin/console doctrine:fixture:load
+php bin/console doctrine:fixture:load
 ```
 
 Lancer le serveur
 
 ```bash
-  symfony serve
+symfony serve
 ```
 
 Une documentation de l'API est disponible à l'adresse http://localhost:8000/api
