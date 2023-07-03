@@ -7,8 +7,10 @@ use Faker\Factory;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\Brand;
+use App\Entity\Follow;
 use DateTimeImmutable;
 use App\Entity\Category;
+use App\Entity\Like;
 use App\Entity\SocialNetwork;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -71,6 +73,19 @@ class AppFixtures extends Fixture
             $manager->persist($brands[$i]);
         }
 
+        // Create 50 Follows
+        $follows = array();
+        for ($i = 0; count($follows) < 50; $i++) {
+            $follow = new Follow();
+            $follow->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+            $follow->setUser($users[array_rand($users)]);
+            $follow->setBrand($brands[array_rand($brands)]);
+            if (!array_search($follow->getUser(), $follows) || !array_search($follow->getBrand(), $follows)) {
+                $follows[$i] = $follow;
+                $manager->persist($follow);
+            }
+        }
+
         // Create 50 posts
         $posts = array();
         for ($i = 0; $i < 50; $i++) {
@@ -80,6 +95,19 @@ class AppFixtures extends Fixture
             $posts[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $posts[$i]->setAuthor($brands[array_rand($brands)]);
             $manager->persist($posts[$i]);
+        }
+
+        // Create 100 likes
+        $likes = array();
+        for ($i = 0; $i < 100; $i++) {
+            $like = new Like();
+            $like->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+            $like->setUserId($users[array_rand($users)]);
+            $like->setPostId($posts[array_rand($posts)]);
+            if (!array_search($like->getUserId(), $likes) || !array_search($like->getPostId(), $likes)) {
+                $likes[$i] = $like;
+                $manager->persist($like);
+            }
         }
 
         $manager->flush();
