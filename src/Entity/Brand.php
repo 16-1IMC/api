@@ -27,7 +27,7 @@ use App\State\UserPasswordHasher;
 #[ORM\Table(name: '`brand`')]
 #[UniqueEntity(fields: ['email'])]
 #[ApiFilter(OrderFilter::class, properties: ['created_at'], arguments: ['orderParameterName' => 'order'])]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'status' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'status' => 'exact', 'email' => 'exact'])]
 #[ApiResource(
     operations: [
         new GetCollection(
@@ -71,15 +71,15 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'brands')]
-    #[Groups(['brand:read:single'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
     private Collection $categories;
 
     #[ORM\OneToMany(mappedBy: 'brand_id', targetEntity: SocialNetwork::class)]
-    #[Groups(['brand:read:single'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
     private Collection $socialNetworks;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
-    #[Groups(['brand:read:single'])]
+    #[Groups(['brand:read:single', 'brand:read:collection'])]
     private Collection $posts;
 
     #[ORM\Column(length: 16)]

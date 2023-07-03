@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -24,6 +25,7 @@ use App\State\UserPasswordHasher;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiFilter(OrderFilter::class, properties: ['created_at'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'email' => 'exact'])]
 #[ApiResource(
     operations: [
         new GetCollection(
@@ -73,11 +75,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Like::class, orphanRemoval: true)]
-    #[Groups(['user:read:single'])]
+    #[Groups(['user:read:single', 'user:read:collection'])]
     private Collection $likes;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Follow::class)]
-    #[Groups(['user:read:single'])]
+    #[Groups(['user:read:single', 'user:read:collection'])]
     private Collection $follows;
 
     public function __construct() {

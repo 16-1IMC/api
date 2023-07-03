@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Persistence\ObjectManager;
 
-
 #[AsController]
 class RegisterUserController extends AbstractController
 {
