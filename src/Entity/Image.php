@@ -3,23 +3,32 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
-use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\ImageRepository;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\Metadata\Post as PostAPI;
 use App\Controller\CreateImageController;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
+use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[Uploadable]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact'])]
 #[ApiResource(
     operations: [
-        new Post(
+        new GetCollection(
+            order: ['id' => 'ASC'],
+        ),
+        new PostAPI(
             uriTemplate: '/images',
             deserialize: false,
             controller: CreateImageController::class,
@@ -28,19 +37,20 @@ use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
                     content: new \ArrayObject([
                         'multipart/form-data' => [
                             'schema' => [
-                                'type' => 'object',
+                                'type' => 'object', 
                                 'properties' => [
                                     'file' => [
-                                        'type' => 'string',
-                                        'format' => 'binary',
-                                    ],
-                                ],
-                            ],
-                        ],
+                                        'type' => 'string', 
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
                     ])
-                ),
+                )
             )
         ),
+        new Delete()
     ]
 )]
 class Image
@@ -48,20 +58,27 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['image:read:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['image:read:collection'])]
     private ?string $path = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['image:read:collection'])]
     private ?string $contentUrl = null;
 
-    #[UploadableField(mapping: 'images', fileNameProperty: 'path')]
+    #[UploadableField(mapping: 'image', fileNameProperty: 'path')]
     private ?File $file = null;
     
     #[ORM\Column(length: 255)]
+    #[Groups(['image:read:collection'])]
     private ?DateTimeImmutable $created_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Post $post = null;
 
     public function __construct()
     {
@@ -85,7 +102,7 @@ class Image
         return $this;
     }
 
-    public function getCreatedAt(): ?string
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
@@ -117,6 +134,18 @@ class Image
     public function setFile(?File $file): static
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): static
+    {
+        $this->post = $post;
 
         return $this;
     }

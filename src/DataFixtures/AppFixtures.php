@@ -1,6 +1,5 @@
 <?php
 
-// src/DataFixtures/AppFixtures.php
 namespace App\DataFixtures;
 
 use Faker\Factory;
@@ -83,6 +82,5 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
-
     }
 }
