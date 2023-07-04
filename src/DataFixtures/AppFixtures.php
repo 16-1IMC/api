@@ -107,7 +107,7 @@ class AppFixtures extends Fixture
             if (!array_search($like->getUserId(), $likes) || !array_search($like->getPostId(), $likes)) {
                 $likes[$i] = $like;
                 $manager->persist($like);
-            }
+            };
         }
 
         $manager->flush();
