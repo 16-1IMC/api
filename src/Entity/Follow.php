@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\FollowRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
+use App\Repository\FollowRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: FollowRepository::class)]
 #[ApiResource()]
+#[ApiFilter(SearchFilter::class, properties: ['brand' => 'exact', 'user' => 'exact'])]
 class Follow
 {
     #[ORM\Id]
