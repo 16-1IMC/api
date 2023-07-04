@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\FollowRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: FollowRepository::class)]
 #[ApiResource()]
@@ -16,10 +17,12 @@ class Follow
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read:single'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['user:read:single'])]
     private ?Brand $brand = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'follows')]
@@ -27,6 +30,7 @@ class Follow
     private ?User $user = null;
 
     #[ORM\Column]
+    #[Groups(['user:read:single'])]
     private ?\DateTimeImmutable $created_at = null;
 
     public function __construct()

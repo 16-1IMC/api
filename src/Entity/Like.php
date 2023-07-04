@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LikeRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
@@ -14,10 +15,12 @@ class Like
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read:single'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['user:read:single'])]
     private ?Post $post_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
@@ -25,6 +28,7 @@ class Like
     private ?User $user_id = null;
 
     #[ORM\Column]
+    #[Groups(['user:read:single'])]
     private ?\DateTimeImmutable $created_at = null;
 
     public function getId(): ?int

@@ -58,23 +58,23 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['image:read:collection'])]
+    #[Groups(['image:read:collection', 'post:read:single', 'brand:read:collection', 'brand:read:single', 'post:read:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['image:read:collection'])]
+    #[Groups(['image:read:collection', 'post:read:single', 'brand:read:collection', 'brand:read:single', 'post:read:collection'])]
     private ?string $path = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['image:read:collection'])]
+    #[Groups(['image:read:collection', 'post:read:single', 'brand:read:collection', 'brand:read:single', 'post:read:collection'])]
     private ?string $contentUrl = null;
 
     #[UploadableField(mapping: 'image', fileNameProperty: 'path')]
     private ?File $file = null;
     
     #[ORM\Column(length: 255)]
-    #[Groups(['image:read:collection'])]
+    #[Groups(['image:read:collection', 'post:read:single', 'brand:read:collection', 'brand:read:single', 'post:read:collection'])]
     private ?DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]

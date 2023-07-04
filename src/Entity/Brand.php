@@ -52,15 +52,15 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['brand:read:single', 'brand:read:collection'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:collection', 'post:read:single'])]
     private ?string $name = null;
     
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:collection', 'post:read:single'])]
     private ?string $email = null;
     
     #[ORM\Column(length: 255)]
@@ -71,15 +71,15 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $plainPassword = null;
 
     #[ORM\Column]
-    #[Groups(['brand:read:single', 'brand:read:collection'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'brands')]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:collection', 'post:read:single'])]
     private Collection $categories;
 
     #[ORM\OneToMany(mappedBy: 'brand_id', targetEntity: SocialNetwork::class)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:collection'])]
     private Collection $socialNetworks;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
@@ -87,13 +87,15 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $posts;
 
     #[ORM\Column(length: 16)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:update'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:update', 'post:read:collection', 'post:read:single'])]
     private ?string $status = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single'])]
     private ?Image $profilePicture = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single'])]
     private ?Image $banner = null;
 
 

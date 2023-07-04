@@ -25,4 +25,13 @@ api_platform:
       JWT:
         name: Authorization
         type: header
+
+  show_webby: false
+
+  eager_loading:
+    enabled: true
+    max_joins: 3000
+    fetch_partial: true
+
+  
     

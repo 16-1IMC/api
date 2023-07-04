@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\SocialNetworkRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\SocialNetworkRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SocialNetworkRepository::class)]
 #[ApiResource()]
@@ -14,15 +15,19 @@ class SocialNetwork
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['brand:read:single'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['brand:read:single'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['brand:read:single'])]
     private ?string $link = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['brand:read:single'])]
     private ?\DateTimeInterface $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'socialNetworks')]

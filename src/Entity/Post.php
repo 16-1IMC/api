@@ -37,22 +37,22 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['post:read:collection', 'post:read:single'])]
+    #[Groups(['post:read:collection', 'post:read:single', 'brand:read:single'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['post:read:collection', 'post:read:single', 'post:write:data', 'post:update'])]
+    #[Groups(['post:read:collection', 'post:read:single', 'post:write:data', 'post:update', 'brand:read:single'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['post:read:collection', 'post:read:single', 'post:write:data', 'post:update'])]
+    #[Groups(['post:read:collection', 'post:read:single', 'post:write:data', 'post:update', 'brand:read:single'])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['post:read:collection', 'post:read:single'])]
+    #[Groups(['post:read:collection', 'post:read:single', 'brand:read:single'])]
     private ?\DateTimeInterface $created_at = null;
 
-    #[Groups(['post:read:collection', 'post:read:single'])]
+    #[Groups(['post:read:collection', 'post:read:single', 'brand:read:single'])]
     #[ORM\OneToMany(mappedBy: 'post_id', targetEntity: Like::class, orphanRemoval: true)]
     private Collection $likes;
 
@@ -63,7 +63,7 @@ class Post
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Image::class)]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['post:read:collection', 'post:read:single', 'post:write:data'])]
+    #[Groups(['post:read:collection', 'post:read:single', 'post:write:data', 'brand:read:single'])]
     private Collection $images;
 
     public function __construct()
