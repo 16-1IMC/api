@@ -33,14 +33,18 @@ use App\State\UserPasswordHasher;
         new GetCollection(
             normalizationContext: ['groups' => ['brand:read:collection']],
         ),
-        new Get(normalizationContext: ['groups' => ['brand:read:single']]),
+        new Get(
+            normalizationContext: ['groups' => ['brand:read:single']]
+        ),
         new PostApi(
             uriTemplate: '/brands/register',
             processor: UserPasswordHasher::class,
             denormalizationContext: ['groups' => ['brand:write:data']]
         ),
         new Delete(),
-        new Put(denormalizationContext: ['groups' => ['brand:update']])
+        new Put(
+            denormalizationContext: ['groups' => ['brand:update']]
+        )
     ]
 )]
 class Brand implements UserInterface, PasswordAuthenticatedUserInterface
