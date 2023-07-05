@@ -16,11 +16,11 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['brand:read:single', 'brand:read:collection'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:single'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['brand:read:single', 'brand:read:collection'])]
+    #[Groups(['brand:read:single', 'brand:read:collection','post:read:single'])]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Brand::class, inversedBy: 'categories')]

@@ -2,15 +2,32 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\FollowRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Follow\DeleteFollowController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: FollowRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get(),
+        new Post(
+            denormalizationContext: ['groups' => ['follow:write']]
+        ),
+        new Delete(
+            uriTemplate: '/follows/{brand_id}&{user_id}',
+            controller: DeleteFollowController::class
+        )
+    ]
+)]
 #[ApiFilter(SearchFilter::class, properties: ['brand' => 'exact', 'user' => 'exact'])]
 class Follow
 {
@@ -20,13 +37,14 @@ class Follow
     #[Groups(['user:read:single'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne()]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['user:read:single'])]
+    #[Groups(['user:read:single', 'follow:write'])]
     private ?Brand $brand = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'follows')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['follow:write'])]
     private ?User $user = null;
 
     #[ORM\Column]

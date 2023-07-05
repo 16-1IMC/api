@@ -22,6 +22,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\State\UserPasswordHasher;
+use Doctrine\ORM\Mapping\JoinColumn;
 
 #[ORM\Entity(repositoryClass: BrandRepository::class)]
 #[ORM\Table(name: '`brand`')]
@@ -90,12 +91,14 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['brand:read:single', 'brand:read:collection', 'brand:update', 'post:read:collection', 'post:read:single'])]
     private ?string $status = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], targetEntity: Image::class)]
+    #[JoinColumn(nullable: true)]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single', 'brand:update'])]
     private ?Image $profilePicture = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], targetEntity: Image::class)]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single', 'brand:update'])]
+    #[JoinColumn(nullable: true)]
     private ?Image $banner = null;
 
 
