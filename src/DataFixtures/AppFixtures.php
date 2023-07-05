@@ -21,7 +21,6 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create();
-        $faker->addProvider(new CustomImageProvider($faker));
 
         // Create 25 users
         $users = array(); 
@@ -51,26 +50,26 @@ class AppFixtures extends Fixture
             $manager->persist($categories[$i]);
         }
 
-        // Create 5 brands
+        // Create 6 brands
         $brands = array();
         $brandStatus = ["PENDING", "APPROVED"];
         $socialNetworksNameList = ["Facebook", "Instagram", "Twitter", "Pinterest", "TikTok", "Website"];
-        for ($i = 0; $i < 5; $i++) {
-            $brandImages = array();
+        for ($i = 0; $i < 6; $i++) {
+            $brandProfilePicture = new Image();
+            $brandProfilePicture->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+            $brandProfilePicture->setPath("stylestock_brand_image_" . $i + 1 . ".png");
+            $manager->persist($brandProfilePicture);
 
-            for ($j = 0; $j < 2; $j++) {
-                $brandImages[$j] = new Image();
-                $brandImages[$j]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
-                $brandImages[$j]->setPath("stylestock_brand_image_" . $i . "_" . $j . ".png");
-                $brandImages[$j]->setContentUrl($faker->imageUrl($width = 640, $height = 480));
-                $manager->persist($brandImages[$j]);
-            }
+            $brandBanner = new Image();
+            $brandBanner->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+            $brandBanner->setPath("stylestock_brand_banner_" . $i + 1 . ".png");
+            $manager->persist($brandBanner);
 
             $brands[$i] = new Brand();
             $brands[$i]->setName($faker->company());
             $brands[$i]->setEmail($faker->email());
-            $brands[$i]->setProfilePicture($brandImages[0]);
-            $brands[$i]->setBanner($brandImages[1]);
+            $brands[$i]->setProfilePicture($brandProfilePicture);
+            $brands[$i]->setBanner($brandBanner);
             $brands[$i]->setPassword('$2y$13$CrASJ2E5ogwy.TMA2xn/ZuCcl2rdIIwfCmU0ajTxwven.BTSzwzTq');
             $brands[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $brands[$i]->addCategory($categories[array_rand($categories)]);
@@ -100,30 +99,77 @@ class AppFixtures extends Fixture
             }
         }
 
-        // Create 20 images
+        // Create 7 images
         $images = array();
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 7; $i++) {
             $images[$i] = new Image();
-            $images[$i]->setPath("stylestock_post_image_" . $i . ".png");
-            $images[$i]->setContentUrl($faker->imageUrl(640, 480));
+            $images[$i]->setPath("stylestock_post_image_" . $i + 1 . ".png");
             $images[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $manager->persist($images[$i]);
         }
 
-        // Create 10 posts
         $posts = array();
-        for ($i = 0; $i < 10; $i++) {
-            $posts[$i] = new Post();
-            $posts[$i]->setTitle($faker->sentence($nbWords = rand(4, 10), $variableNbWords = true));
-            $posts[$i]->setContent($faker->text($maxNbChars = 255));
-            $posts[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
-            for ($j = 0; $j < rand(1, 3); $j++) {
-                $imageIndex = array_rand($images);
-                $posts[$i]->addImage($images[$imageIndex]); 
-            }
-            $posts[$i]->setAuthor($brands[array_rand($brands)]);
-            $manager->persist($posts[$i]);
-        }
+
+        // Create Pumba post
+        $pumbaPost = new Post();
+        $pumbaPost->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+        $pumbaPost->setAuthor($brands[0]);
+        $pumbaPost->setTitle("Nouvelle collection : Pumba et les 40 chasseurs");
+        $pumbaPost->setContent("Pumba et les 40 chasseurs est une collection de vêtements pour homme et femme. Elle est composée de 40 pièces uniques, toutes fabriquées à la main. Les vêtements sont fabriqués à partir de tissus recyclés et sont donc éco-responsables.");
+        $pumbaPost->addImage($images[0]);
+        array_push($posts, $pumbaPost);
+        $manager->persist($pumbaPost);
+
+        // Create Abibas post 1
+        $abibasPost1 = new Post();
+        $abibasPost1->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+        $abibasPost1->setAuthor($brands[1]);
+        $abibasPost1->setTitle("Abibas x F-COURD");
+        $abibasPost1->setContent("Abibas s'associe à F-COURD pour une collection de vêtements pour devenir un vrai sapeur comme F-COURD.");
+        $abibasPost1->addImage($images[1]);
+        array_push($posts, $abibasPost1);
+        $manager->persist($abibasPost1);
+
+        // Create Abibas post 2
+        $abibasPost2 = new Post();
+        $abibasPost2->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+        $abibasPost2->setAuthor($brands[1]);
+        $abibasPost2->setTitle("Abibas CDM 2010 - Tribute");
+        $abibasPost2->setContent("Abibas rend hommage à la Coupe du Monde 2010 en Afrique du Sud avec une collection de vêtements aux couleurs de l'Afrique du Sud co-designé par Florent Malouda.");
+        $abibasPost2->addImage($images[6]);
+        array_push($posts, $abibasPost2);
+        $manager->persist($abibasPost2);
+
+        // Create Sotizerie post 
+        $sotizeriePost = new Post();
+        $sotizeriePost->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+        $sotizeriePost->setAuthor($brands[2]);
+        $sotizeriePost->setTitle("Sotizerie Edition Spéciale Tour de France");
+        $sotizeriePost->setContent("Pret à soutenir Alain-Philippe lors de ce TDF 2023 ? Retrouvez notre collection spéciale Tour de France dans nos boutiques et sur notre site internet.");
+        $sotizeriePost->addImage($images[2]);
+        $sotizeriePost->addImage($images[3]);
+        array_push($posts, $sotizeriePost);
+        $manager->persist($sotizeriePost);
+
+        // Create Fail post
+        $failPost = new Post();
+        $failPost->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+        $failPost->setAuthor($brands[3]);
+        $failPost->setTitle("Fail : la marque qui ne marche pas");
+        $failPost->setContent("Fail est une marque de vêtements qui ne marche pas. Nous avons décidé de créer cette marque pour vous montrer que nous sommes capables de faire des vêtements qui ne marchent pas. Ca marche ?");
+        $failPost->addImage($images[4]);
+        array_push($posts, $failPost);
+        $manager->persist($failPost);
+
+        // Create Lactose post
+        $lactosePost = new Post();
+        $lactosePost->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
+        $lactosePost->setAuthor($brands[4]);
+        $lactosePost->setTitle("Lactose x Les Produits Laitiers");
+        $lactosePost->setContent("Lactose s'associe aux Produits Laitiers pour une collection de vêtements en cuir de vâche.");
+        $lactosePost->addImage($images[5]);
+        array_push($posts, $lactosePost);
+        $manager->persist($lactosePost);
 
         // Create 25 likes
         $likes = array();
@@ -137,8 +183,6 @@ class AppFixtures extends Fixture
                 $manager->persist($like);
             };
         }
-
-        
 
         $manager->flush();
     }
