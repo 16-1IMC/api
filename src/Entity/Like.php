@@ -2,16 +2,49 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LikeRepository;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
+use App\Controller\Like\DeleteLikeController;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Post as PostApi;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
-#[ApiResource()]
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get(),
+        new PostApi(),
+        new Delete(
+            uriTemplate: '/likes',
+            controller: DeleteLikeController::class,
+            openapi: new Operation(
+                parameters: [
+                    new Parameter(
+                        name: 'postId',
+                        in: 'query',
+                        required: true,
+                        schema: ['type' => 'string']
+                    ),
+                    new Parameter(
+                        name: 'userId',
+                        in: 'query',
+                        required: true,
+                        schema: ['type' => 'string']
+                    )
+                ]
+            )
+        )
+    ]
+)]
 #[ApiFilter(SearchFilter::class, properties: ['post_id' => 'exact', 'user_id' => 'exact'])]
 class Like
 {

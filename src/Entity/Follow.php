@@ -45,7 +45,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     )
                 ]
             )
-            )
+        )
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['brand' => 'exact', 'user' => 'exact'])]

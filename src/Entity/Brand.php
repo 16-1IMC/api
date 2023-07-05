@@ -80,7 +80,7 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $categories;
 
     #[ORM\OneToMany(mappedBy: 'brand_id', targetEntity: SocialNetwork::class)]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:collection'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update'])]
     private Collection $socialNetworks;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
