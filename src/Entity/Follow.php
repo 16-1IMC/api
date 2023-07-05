@@ -11,6 +11,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
 use App\Controller\Follow\DeleteFollowController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -23,9 +25,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
             denormalizationContext: ['groups' => ['follow:write']]
         ),
         new Delete(
-            uriTemplate: '/follows/{brand_id}&{user_id}',
-            controller: DeleteFollowController::class
-        )
+            uriTemplate: '/follows',
+            controller: DeleteFollowController::class,
+            openapi: new Operation(
+                parameters: [
+                    new Parameter(
+                        name: 'brandId',
+                        in: 'query',
+                        required: true,
+                        schema: ['type' => 'string']
+                    ),
+                    new Parameter(
+                        name: 'userId',
+                        in: 'query',
+                        required: true,
+                        schema: ['type' => 'string']
+                    )
+                ]
+            )
+            )
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['brand' => 'exact', 'user' => 'exact'])]
