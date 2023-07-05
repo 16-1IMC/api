@@ -76,7 +76,7 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'brands')]
-    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:collection', 'post:read:single'])]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:single'])]
     private Collection $categories;
 
     #[ORM\OneToMany(mappedBy: 'brand_id', targetEntity: SocialNetwork::class)]

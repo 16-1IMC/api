@@ -19,7 +19,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: FollowRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            denormalizationContext: ['groups' => ['follow:read:collection']]
+        ),
         new Get(),
         new Post(
             denormalizationContext: ['groups' => ['follow:write']]
@@ -52,21 +54,21 @@ class Follow
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read:single'])]
+    #[Groups(['user:read:single', 'follow:read:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne()]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['user:read:single', 'follow:write'])]
+    #[Groups(['user:read:single', 'follow:write', 'follow:read:collection'])]
     private ?Brand $brand = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'follows')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['follow:write'])]
+    #[Groups(['follow:write', 'follow:read:collection'])]
     private ?User $user = null;
 
     #[ORM\Column]
-    #[Groups(['user:read:single'])]
+    #[Groups(['user:read:single', 'follow:read:collection'])]
     private ?\DateTimeImmutable $created_at = null;
 
     public function __construct()

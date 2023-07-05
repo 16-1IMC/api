@@ -22,6 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new GetCollection(
             normalizationContext: ['groups' => ['post:read:collection']],
+            order: ['created_at' => 'DESC']
         ),
         new Get(normalizationContext: ['groups' => ['post:read:single']]),
         new PostApi(
