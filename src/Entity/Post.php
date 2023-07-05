@@ -31,7 +31,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Put(denormalizationContext: ['groups' => ['post:update']])
     ]
 )]
-#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'title' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'author' => 'exact', 'title' => 'partial'])]
 class Post
 {
     #[ORM\Id]
