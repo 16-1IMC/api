@@ -70,6 +70,7 @@ class AppFixtures extends Fixture
             $brands[$i]->setEmail($faker->email());
             $brands[$i]->setProfilePicture($brandProfilePicture);
             $brands[$i]->setBanner($brandBanner);
+            $brands[$i]->setDescription($faker->text());
             $brands[$i]->setPassword('$2y$13$CrASJ2E5ogwy.TMA2xn/ZuCcl2rdIIwfCmU0ajTxwven.BTSzwzTq');
             $brands[$i]->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime($max = 'now')));
             $brands[$i]->addCategory($categories[array_rand($categories)]);

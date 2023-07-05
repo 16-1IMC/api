@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use App\Entity\SocialNetwork;
 use ApiPlatform\Metadata\Delete;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\BrandRepository;
@@ -100,6 +101,10 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['brand:read:single', 'brand:read:collection', 'post:read:collection', 'post:read:single', 'brand:update', 'brand:write:data'])]
     #[JoinColumn(nullable: true)]
     private ?Image $banner = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['brand:read:single', 'brand:read:collection', 'brand:write:data', 'brand:update', 'post:read:collection', 'post:read:single'])]
+    private ?string $description = null;
 
 
     public function __construct()
@@ -317,5 +322,17 @@ class Brand implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }
