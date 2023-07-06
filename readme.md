@@ -43,6 +43,7 @@ php bin/console doctrine:schema:update --force
 ```
 
 (Optionnel) Charger des données de test
+Pour avoir les images chargées dans les fixtures, déplacer le contenu des 3 dossiers présent dans /public/fixtures dans /plublic/images.
 
 ```bash
 php bin/console doctrine:fixture:load
