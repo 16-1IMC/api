@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiFilter;
@@ -28,6 +29,7 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
         new GetCollection(
             order: ['id' => 'ASC'],
         ),
+        new Get(),
         new PostAPI(
             uriTemplate: '/images',
             deserialize: false,
